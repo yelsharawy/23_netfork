@@ -7,7 +7,7 @@
 char *read_string(int fd) {
     int len;
     if (read(fd, &len, sizeof(int)) != sizeof(int)) return NULL;
-    // len = ntohl(len);
+    len = ntohl(len);
     char *result = malloc(len+1);
     CHECKTRUEMSG(len+1 == read(fd, result, len+1), "could not read correct number of bytes");
     return result;
@@ -17,8 +17,8 @@ char *read_string(int fd) {
 // the implementation writes `len` to `str`, then `len+1` characters of `str`
 // (to send terminating 0 as well)
 void write_string_len(int fd, char *str, int len) {
-    // len = htonl(len);
-    CHECKNEG1MSG(write(fd, &len, sizeof(int)), "could not write int");
+    int len2 = htonl(len);
+    CHECKNEG1MSG(write(fd, &len2, sizeof(int)), "could not write int");
     CHECKNEG1MSG(write(fd, str, len+1), "could not write string");
 }
 
